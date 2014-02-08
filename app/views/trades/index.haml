@@ -1,5 +1,1 @@
-%table
-  - @data.each do |strategy_name, data|
-    %tr
-      %td= "#{strategy_name} #{ChronicDuration.output(strategy_name.slice(strategy_name.rindex('_')+1..-1).to_i)}"
-      %td= data[:usd]
+= render partial: "trades/list", :locals => { trades: @trades }

@@ -1,0 +1,18 @@
+= link_to 'root', root_path
+%table.table.table-hover.table-bordered{style: 'width: 90%; margin: auto; margin-top: 5px;'}
+  %tbody
+    %tr
+      %th description
+      %th begin
+      %th end
+      %th profit rate
+      %th actions
+    - trades.each do |trade|
+      %tr{style: 'cursor: pointer;'}
+        %td= link_to trade.to_s, trade_path(trade)
+        %td= trade.begin
+        %td= trade.end
+        %td= trade.profit_rate
+        %td
+          = link_to continue_trade_path(trade) do
+            %button.btn.btn-success Continue

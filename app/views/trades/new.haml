@@ -1,0 +1,25 @@
+.container-fluid{style: 'margin: 50px;'}
+  = form_for @trade, html: {class: 'form-horizontal', role: 'form'} do |f|
+    .form-group
+      = label_tag :description, nil, class: 'col-sm-2 control-label'
+      .col-xs-2
+        = text_field_tag :description, nil, class: 'form-control input-sm'
+    .form-group
+      = f.label :begin, class: 'col-sm-2 control-label'
+      .col-xs-2
+        = f.text_field :begin, value: Transaction.order('time asc').first.time.to_date + 1.month, class: 'form-control input-sm'
+    .form-group
+      = f.label :initial_usd, class: 'col-sm-2 control-label'
+      .col-xs-2
+        = f.text_field :initial_usd, value: 1000, class: 'form-control input-sm'
+    .form-group
+      = f.label :exchange, class: 'col-sm-2 control-label'
+      .col-xs-2
+        = f.select :exchange_id, options_from_collection_for_select(Exchange.all, :id, :name), {}, {class: 'form-control'}
+    .form-group
+      = label_tag :interval, nil, class: 'col-sm-2 control-label'
+      .col-xs-2
+        = select_tag :interval, options_for_select(MOD_DESC, Hour), {class: 'form-control'}
+    .form_group
+      .col-sm-offset-2
+        = f.submit 'Create Trade', class: 'btn btn-success'

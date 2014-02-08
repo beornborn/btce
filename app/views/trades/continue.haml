@@ -1,0 +1,54 @@
+%table.table{style: 'width: 90%; margin: auto; margin-top: 5px;'}
+  %tbody
+    %tr
+      %th Description
+      %th Begin
+      %th End
+      %th Progit rate
+      %th Actions
+    %tr
+      %td= @trade.to_s
+      %td= @trade.begin.to_date
+      %td= @trade.end.try(:to_date)
+      %td= @trade.profit_rate
+      %td
+        %button#go.btn.btn-success Go
+        = link_to root_path do
+          %button.btn.btn-primary{type: 'button'} Back
+        #status{style: 'color: red;'}
+
+#series{style: 'margin-left: 50px;'}
+  %label.checkbox-inline
+    = check_box_tag 'volume', 'show', true
+    volume
+  %label.checkbox-inline
+    = check_box_tag 'currency', 'show', true
+    bitcoin
+= select_tag 'indicator_id', options_from_collection_for_select(Indicator.all, :id, :name), style: 'margin: auto; margin-top: 5px; margin-left: 50px;'
+#signals{style: 'margin-left: 50px;'}
+#description{style: 'margin-left: 50px; margin-top: 5px; display: none;'}
+#ichimoku_control{style: 'margin-left: 50px;'}
+  %label.checkbox-inline
+    = check_box_tag 'tenkan_sen', 'show', true
+    tenkan
+  %label.checkbox-inline
+    = check_box_tag 'kijun_sen', 'show', true
+    kijun
+  %label.checkbox-inline
+    = check_box_tag 'chinkou_span', 'show', true
+    chinkou
+  %label.checkbox-inline
+    = check_box_tag 'senkou_span_a', 'show', true
+    senkou_a
+  %label.checkbox-inline
+    = check_box_tag 'senkou_span_b', 'show', true
+    senkou_b
+
+#details
+
+#chart{style: 'margin-left: 20px; height: 592px;', data: {id: @trade.id, begin: @trade.end - 7.day, end: @trade.end}}
+
+:javascript
+  $(document).ready(function(){
+    initContinue()
+  })

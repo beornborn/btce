@@ -6,6 +6,8 @@ class CreateTrades < ActiveRecord::Migration
       t.decimal :initial_usd, scale: 12, precision: 24
       t.references :exchange
       t.references :strategy
+      t.decimal :profit_rate, scale: 2, precision: 4
+      t.text :options
     end
   end
 end

@@ -7,11 +7,11 @@ capybara-*.html
 /.bundle
 /vendor/bundle
 /log/*
+/csv_data
 /tmp/*
 /db/*.sqlite3
 /public/system/*
 /coverage/
-/csv_data/
 /spec/tmp/*
 **.orig
 rerun.txt

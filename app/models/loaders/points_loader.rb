@@ -1,0 +1,3 @@
+class PointsLoader < DataLoader
+  
+end

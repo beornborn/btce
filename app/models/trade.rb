@@ -1,67 +1,86 @@
 class Trade < ActiveRecord::Base
-  attr_accessor :usd, :btc, :estimate_usd, :exchange, :strategy, :interval, :current_situation
+  has_many :trade_results
+  belongs_to :exchange
+  belongs_to :strategy
+  attr_accessor :logger
+  attr_accessor :usd, :estimate_usd, :btc, :current_situation, :action
+  serialize :options
+  
+  def self.try_to_run
+    look_backs = [15.minute, 2.hour, 8.hour, 1.day, 7.day, 1.month]
+    leverages = [0.001, 0.005, 0.01, 0.05, 0.1]
 
-  def initialize usd, exchange, strategy, interval
-    @usd = usd
-    @btc = 0
-    @estimate_usd = usd
-    @exchange = Exchange.find_by(name: exchange)
-    @strategy = strategy
-    @interval = interval
-    @current_situation = nil
+    # look_backs.each do |look_back|
+    #   leverages.each do |leverage|
+    #     next if look_back == 15.minute && ([0.001, 0.005, 0.01].include? leverage)
+        strategy = Strategy.find_or_create_strategy 'ichimoku', {}
+        exchange = Exchange.find_or_create_by name: 'btce'
+        Trade.where(strategy_id: strategy.id).destroy_all
+        begin_t = Date.new(2013, 10, 1)
+        end_t = Date.new(2014, 1, 1)
+        trade = Trade.create(initial_usd: 1000, begin: begin_t, end: end_t, exchange: exchange, strategy: strategy)
+        trade.run
+      # end
+    # end
   end
 
-  def self.last_usd strategy
-    where(strategy: strategy).order('time asc').last.estimate_usd
+  def calculate_profit_rate
+    result_usd = self.trade_results.order('time asc').last.estimate_usd
+    (result_usd / initial_usd).round(2)
   end
 
-  def self.run_for_intervals usd, exchange, strategy_name, interval
-    Strategy::INTERVALS.each do |look_back_for|
-      strategy = Strategy.new strategy_name, look_back_for
-      Trade.new(usd, exchange, strategy, interval).run
-    end 
+  def init_trade
+    ActiveRecord::Base.logger.level = 1
+    self.logger = BeoLogger.new self
+    
+    trade_results.destroy_all
+    
+    self.current_situation = Minute.where('time > ?', self.begin).order('time asc').first
+
+    self.usd = self.initial_usd
+    self.estimate_usd = self.usd
+    self.btc = 0
+
+    store_result
+  end
+
+  def to_s
+    options[:description]
   end
 
   def run
-    ActiveRecord::Base.logger.level = 1
-    StrategyResult.where(strategy: strategy.to_s).destroy_all
-    self.current_situation = Minute.where('time > ?', interval[:begin]).order('time asc').first
-    @iter_date = current_situation.time.to_date
-    log_result
+    init_trade
 
-    while current_situation && current_situation.time <= interval[:end]
+    while current_situation && current_situation.time <= self.end
       strategy.decide_for self
-      if @iter_date != current_situation.time.to_date
-        ap "#{@iter_date}" 
-        @iter_date+=1.day
-      end 
-      self.current_situation = Minute.find_by(time: current_situation.time += strategy.step)
+      calculate_situation_result
+
+      logger.print_progress
+      
+      store_result
+      self.current_situation = Minute.where('time >= ?', current_situation.time + strategy.options[:trade_step]).order('time asc').limit(1).first
     end
+
+    pr = calculate_profit_rate
+    self.update_attribute(:profit_rate, pr < 0 ? 0 : pr)
   end
 
   def buy_for amount
-    self.usd -= amount
-    self.btc += ((amount / current_situation.enter) * (1 - exchange.comission)).round(8)
-    self.estimate_usd = (btc * current_situation.enter * (1 - exchange.comission) + usd).round(8)
-
-    log_result
+    self.usd -= amount 
+    self.btc += (amount / current_situation.close) * (1 - exchange.options[:comission])
   end
 
   def sell amount
-    self.usd += (amount * current_situation.enter * (1 - exchange.comission)).round(8)
-    self.btc -= amount
-    self.estimate_usd = (btc * current_situation.enter * (1 - exchange.comission) + usd).round(8)
-
-    log_result
+    self.btc -= amount 
+    self.usd += (amount * current_situation.close) * (1 - exchange.options[:comission])
   end
 
-  def log_result
-    StrategyResult.create(time: current_situation.time, btc: btc, usd: usd, estimate_usd: estimate_usd, strategy: strategy.to_s)
-    ap "#{current_situation.time}: usd: #{usd}$, estimate_usd: #{estimate_usd}$, btc: #{btc}" 
+  def calculate_situation_result
+    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - exchange.options[:comission])
   end
 
-  def self.ago time
-    last = Minute.last.time
-    {begin: last - time, end: last}
+  def store_result
+    TradeResult.create(time: current_situation.time, usd: usd, estimate_usd: estimate_usd, btc: btc, trade: self, action: self.action)
+    self.action = nil
   end
 end

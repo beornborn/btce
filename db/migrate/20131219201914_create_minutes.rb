@@ -2,11 +2,12 @@ class CreateMinutes < ActiveRecord::Migration
   def change
     create_table :minutes do |t|
       t.timestamp :time
-      t.decimal :enter, scale: 12, precision: 24
+      t.decimal :open, scale: 12, precision: 24
+      t.decimal :high, scale: 12, precision: 24
+      t.decimal :low, scale: 12, precision: 24
       t.decimal :close, scale: 12, precision: 24
-      t.decimal :min, scale: 12, precision: 24
-      t.decimal :max, scale: 12, precision: 24
       t.decimal :amount, scale: 12, precision: 24
+      t.decimal :tramount, scale: 12, precision: 24
     end
 
     add_index :minutes, :time

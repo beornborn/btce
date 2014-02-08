@@ -1,0 +1,23 @@
+%table.table{style: 'width: 90%; margin: auto; margin-top: 5px;'}
+  %tbody
+    %tr
+      %td= @trade.to_s
+      %td= text_field_tag :begin, @trade.begin.to_date, class: 'form-control'
+      %td= text_field_tag :end, @trade.end.to_date + 1.day, class: 'form-control'
+      %td= @trade.profit_rate
+      %td
+        %button#go.btn.btn-success Go
+        = link_to root_path do
+          %button.btn.btn-primary{type: 'button'} Back
+        #status{style: 'color: red;'}
+
+#trade_chart{style: 'height: 500px;', data: {id: @trade.id}}
+
+:javascript
+  $(document).ready(function(){
+    $('#go').click(function(){
+      var begin = $('#begin').val()
+      var end = $('#end').val()
+      createChart(begin, end)
+    })
+  })
