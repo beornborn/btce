@@ -8,16 +8,10 @@ class CommonController < ApplicationController
     begin_t = Date.parse(params[:begin])
     end_t = Date.parse(params[:end])
     model = (params[:model] || 'hour').camelize.constantize
-    intervals = []
-    volumes = []
-    tramounts = []
-    model.select('time, open, high, low, close, amount, tramount').where('time >= ? and time <= ?', begin_t, end_t).order('time asc').each do |min|
-      intervals << [min.time.to_i*1000, min.open.to_f, min.high.to_f, min.low.to_f, min.close.to_f]
-      volumes << [min.time.to_i*1000, min.amount.to_f, min.tramount.to_f]
-      tramounts << [min.time.to_i*1000, min.tramount.to_f]
-    end
 
-    render json: {intervals: intervals, volumes: volumes, tramounts: tramounts}
+    database_data = model.select('time, open, high, low, close, amount, tramount').where('time >= ? and time <= ?', begin_t, end_t).order('time asc').to_a
+
+    render json: to_chart_data(database_data)
   end
 
   def ichimoku

@@ -1,16 +1,10 @@
 class TradesController < ApplicationController
   def continue_chart
     trade = Trade.find(params[:id])
-    intervals = []
-    volumes = []
-    tramounts = []
-    trade.options[:model_name].constantize.select('time, open, high, low, close, amount, tramount').where('time >= ? and time <= ?', trade.begin - 7.day, trade.end).order('time asc').each do |min|
-      intervals << [min.time.to_i*1000, min.open.to_f, min.high.to_f, min.low.to_f, min.close.to_f]
-      volumes << [min.time.to_i*1000, min.amount.to_f, min.tramount.to_f]
-      tramounts << [min.time.to_i*1000, min.tramount.to_f]
-    end
 
-    render json: {intervals: intervals, volumes: volumes, tramounts: tramounts}
+    database_data = trade.options[:model_name].constantize.select('time, open, high, low, close, amount, tramount').where('time >= ? and time <= ?', trade.begin - 7.day, trade.end).order('time asc').to_a
+
+    render json: to_chart_data(database_data)
   end
 
   def index
