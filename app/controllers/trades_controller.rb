@@ -30,29 +30,4 @@ class TradesController < ApplicationController
   def show
     @trade = Trade.find params[:id]
   end
-
-  def chart
-    trade = Trade.find(params[:id])
-
-    begin_by_param = Date.parse(params[:begin])
-    end_by_param = Date.parse(params[:end])
-    begin_by_tr = trade.trade_results.order('time asc').first.time
-    end_by_tr = trade.trade_results.order('time asc').last.time
-    begin_t = [begin_by_param, begin_by_tr].max
-    end_t = [end_by_param, end_by_tr].min
-
-    minutes = Minute.select('time, open, high, low, close').where('time >= ? and time <= ?', begin_t, end_t).order('time asc').map do |min|
-      [min.time.to_i*1000, min.open.to_f, min.high.to_f, min.low.to_f, min.close.to_f]
-    end
-
-    trade_results = trade.trade_results.select('time, estimate_usd').where('time >= ? and time <= ?', begin_t, end_t).order('time asc').map do |tr|
-      [tr.time.to_i*1000, tr.estimate_usd.to_i - 1000]
-    end
-
-    flags = trade.trade_results.select('time, action').where.not(action: nil).order('time asc').map do |tr|
-      {x: tr.time.to_i*1000, title: tr.action}
-    end
-
-    render json: {minutes: minutes, trade: trade_results, flags: flags, rate: trade.profit_rate}
-  end
 end
