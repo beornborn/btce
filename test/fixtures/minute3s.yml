@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  time: 2013-12-21 22:13:50
+  enter: 9.99
+  close: 9.99
+  min: 9.99
+  max: 9.99
+  amount: 9.99
+
+two:
+  time: 2013-12-21 22:13:50
+  enter: 9.99
+  close: 9.99
+  min: 9.99
+  max: 9.99
+  amount: 9.99
