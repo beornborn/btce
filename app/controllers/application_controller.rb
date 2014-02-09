@@ -12,7 +12,7 @@ private
     intervals, volumes, tramounts = [], [], []
     data.each do |min|
       intervals << intervals_to_chart_format(min)
-      volumes << volumes_to_chart_format
+      volumes << volumes_to_chart_format(min)
       tramounts << tramounts_to_chart_format(min)
     end
 
@@ -28,6 +28,6 @@ private
   end
 
   def tramounts_to_chart_format(min)
-    [min.time.to_i*1000, min.tramount.to_f]]
+    [min.time.to_i*1000, min.tramount.to_f]
   end
 end

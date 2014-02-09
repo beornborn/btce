@@ -13,6 +13,7 @@ function addIchimoku(begin, end){
     $('#status').text('')
     $.each(data, function(name, series){
       chart.addSeries({
+        id: name,
         name: name,
         data: series
       })

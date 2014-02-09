@@ -1,7 +1,7 @@
 class IntervalsLoader < DataLoader
   def self.load_interval_for_sure set
     set = %w(minute3 minute5 minute15 minute30 hour hour2 hour4 hour6 hour12 day day3 day7) if set == 'all'
-    set.each do |interval| 
+    set.each do |interval|
       interval_sure = SystemData.find_by(name: "#{interval.camelize.constantize.table_name}_sure")
       interval_sure ||= SystemData.create name: "#{interval.camelize.constantize.table_name}_sure", val: Minute.order('time asc').first.time.end_of_day + 1
       load_interval interval, interval_sure.val, SystemData.find_by(name: 'minutes_sure').val, SULO9
@@ -23,7 +23,6 @@ class IntervalsLoader < DataLoader
         next
       end
 
-      time = pool.first.time
       open = pool.first.open
       close = pool.last.close
       low = pool.map(&:low).min
@@ -44,5 +43,10 @@ class IntervalsLoader < DataLoader
         batch = []
       end
     end
+  end
+
+  def self.not_sure_for_derivatives
+    set = %w(minute3 minute5 minute15 minute30 hour hour2 hour4 hour6 hour12 day day3 day7).map{|x| "#{x.camelize.constantize.table_name}_sure"}
+    SystemData.where(name: set).each {|x| x.update_attribute(:val, Time.at(Transaction.order('time asc').first.time))}
   end
 end

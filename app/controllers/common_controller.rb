@@ -5,8 +5,8 @@ class CommonController < ApplicationController
   end
 
   def chart
-    begin_t = Date.parse(params[:begin])
-    end_t = Date.parse(params[:end])
+    begin_t = Time.parse(params[:begin])
+    end_t = Time.parse(params[:end])
     model = (params[:model] || 'hour').camelize.constantize
 
     database_data = model.select('time, open, high, low, close, amount, tramount').where('time >= ? and time <= ?', begin_t, end_t).order('time asc').to_a
@@ -15,8 +15,9 @@ class CommonController < ApplicationController
   end
 
   def ichimoku
-    begin_t = Date.parse(params[:begin])
-    end_t = Date.parse(params[:end])
+    begin_t = Time.parse(params[:begin])
+    end_t = Time.parse(params[:end])
+    ap end_t
     chinkou_limit = [end_t, Time.now].min
     indicator = Indicator.find_by(name: 'ichimoku')
 

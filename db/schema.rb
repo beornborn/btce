@@ -238,10 +238,13 @@ ActiveRecord::Schema.define(version: 20140203170948) do
   create_table "trades", force: true do |t|
     t.datetime "begin"
     t.datetime "end"
-    t.decimal  "initial_usd", precision: 24, scale: 12
+    t.decimal  "initial_usd",  precision: 24, scale: 12
+    t.decimal  "usd",          precision: 24, scale: 12
+    t.decimal  "estimate_usd", precision: 24, scale: 12
+    t.decimal  "btc",          precision: 24, scale: 12
     t.integer  "exchange_id"
     t.integer  "strategy_id"
-    t.decimal  "profit_rate", precision: 4,  scale: 2
+    t.decimal  "profit_rate",  precision: 4,  scale: 2
     t.text     "options"
   end
 

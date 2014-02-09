@@ -24,6 +24,10 @@ Bo::Application.routes.draw do
     get :chart, on: :member
     get :continue_chart, on: :member
     get :continue, on: :member
+    get :do_trade, on: :member
+    get :get, on: :member
+    get :last_chart_point, on: :member
+    get :last_ichimoku_point, on: :member
   end
 
   resources :minutes, only: []

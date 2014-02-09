@@ -1,4 +1,4 @@
-%table.table{style: 'width: 90%; margin: auto; margin-top: 5px;'}
+%table#trade.table{style: 'width: 90%; margin: auto; margin-top: 5px;'}
   %tbody
     %tr
       %th Description
@@ -7,10 +7,10 @@
       %th Progit rate
       %th Actions
     %tr
-      %td= @trade.to_s
-      %td= @trade.begin.to_date
-      %td= @trade.end.try(:to_date)
-      %td= @trade.profit_rate
+      %td#description
+      %td#begin
+      %td#end
+      %td#profit_rate
       %td
         %button#go.btn.btn-success Go
         = link_to root_path do
@@ -45,8 +45,14 @@
     senkou_b
 
 #details
-
-#chart{style: 'margin-left: 20px; height: 592px;', data: {id: @trade.id, begin: @trade.end - 7.day, end: @trade.end}}
+#action{style: 'margin-right: 50px; float: right'}
+  = link_to do_trade_trade_path(@trade_id, act: 'wait'), id: 'wait' do
+    %button.btn.btn-primary Wait
+  = link_to do_trade_trade_path(@trade_id, act: 'buy'), id: 'buy', style: 'display: none;' do
+    %button.btn.btn-primary Buy
+  = link_to do_trade_trade_path(@trade_id, act: 'sell'), id: 'sell', style: 'display: none;' do
+    %button.btn.btn-primary Sell
+#chart{style: 'margin-left: 20px; height: 592px;', data: {id: @trade_id}}
 
 :javascript
   $(document).ready(function(){
