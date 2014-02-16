@@ -1,5 +1,5 @@
 class Trade < ActiveRecord::Base
-  has_many :trade_results
+  has_many :trade_results, dependent: :destroy
   belongs_to :exchange
   belongs_to :strategy
   attr_accessor :logger

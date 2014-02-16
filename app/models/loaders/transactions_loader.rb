@@ -7,7 +7,7 @@ class TransactionsLoader < DataLoader
     Transaction.delete_all(["time > ? AND time <= ?", transactions_sure.val, Time.at(last_timestamp - 1)])
 
     batch = []
-    CSV.foreach("#{Rails.root}/csv_data/btce_transactions.csv") do |row| 
+    CSV.foreach("#{Rails.root}/csv_data/btce_transactions.csv") do |row|
       next if row[0].to_i <= transactions_sure.val.to_i
 
       batch << tr_by_row(row)
@@ -27,6 +27,10 @@ class TransactionsLoader < DataLoader
     logger.info "------------------------------- new transactions batch #{Time.now} ----------------------------------------"
     logger.info "batch size: #{batch.size}"
     logger.info "first instance--- time: #{Time.at(batch.first.time)} open: #{batch.first.price} amount: #{batch.first.amount}"
-    logger.info "last instance---- time: #{Time.at(batch.last.time)} open: #{batch.last.price} amount: #{batch.last.amount}"    
+    logger.info "last instance---- time: #{Time.at(batch.last.time)} open: #{batch.last.price} amount: #{batch.last.amount}"
+  end
+
+  def self.not_sure_from time
+    SystemData.find_by(name: 'transactions_sure').update_attribute(:val, time)
   end
 end

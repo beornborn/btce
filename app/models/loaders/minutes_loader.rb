@@ -37,7 +37,7 @@ class MinutesLoader < DataLoader
                    high: prices.max,
                    amount: pool.map(&:amount).sum,
                    tramount: pool.size
-      end  
+      end
 
       batch << instance
 
@@ -53,5 +53,9 @@ class MinutesLoader < DataLoader
         batch = []
       end
     end
+  end
+
+  def self.not_sure_from time
+    SystemData.find_by(name: 'minutes_sure').update_attribute(:val, time)
   end
 end

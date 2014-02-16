@@ -45,8 +45,8 @@ class IntervalsLoader < DataLoader
     end
   end
 
-  def self.not_sure_for_derivatives
+  def self.not_sure_for_derivatives_from time
     set = %w(minute3 minute5 minute15 minute30 hour hour2 hour4 hour6 hour12 day day3 day7).map{|x| "#{x.camelize.constantize.table_name}_sure"}
-    SystemData.where(name: set).each {|x| x.update_attribute(:val, Time.at(Transaction.order('time asc').first.time))}
+    SystemData.where(name: set).each {|x| x.update_attribute(:val, time)}
   end
 end

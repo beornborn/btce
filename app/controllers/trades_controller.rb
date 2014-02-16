@@ -7,6 +7,11 @@ class TradesController < ApplicationController
     render json: to_chart_data(database_data)
   end
 
+  def destroy
+    Trade.find(params[:id]).destroy
+    redirect_to trades_path
+  end
+
   def index
     @trades = Trade.all
   end

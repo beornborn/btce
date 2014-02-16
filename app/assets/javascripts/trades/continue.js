@@ -10,7 +10,8 @@ function initContinue(){
       trade = trade_data[0]
       setPageTradeData()
       initCommonChart(chart_data[0])
-      addIchimoku(trade.begin, trade.end)
+      var end_minus_7_days = new Date(Date.parse(trade.end) - 1000*60*60*24*7)
+      addIchimoku(end_minus_7_days, trade.end)
       get_signals()
       toggleVolume(volume_show)
       subscribeEvents()

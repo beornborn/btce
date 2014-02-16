@@ -20,7 +20,7 @@ Bo::Application.routes.draw do
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
-  resources :trades, only: [:index, :show, :new, :create] do
+  resources :trades, only: [:index, :show, :new, :create, :destroy] do
     get :chart, on: :member
     get :continue_chart, on: :member
     get :continue, on: :member

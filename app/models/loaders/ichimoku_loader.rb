@@ -75,6 +75,11 @@ class IchimokuLoader < DataLoader
     l_m_spaned = data[(current_index - long_a + 1 - medium_a)..current_index - medium_a]
     (l_m_spaned.map(&:high).max + l_m_spaned.map(&:low).min) / 2
   end
+
+  def self.not_sure_from time
+    ichimoku = Indicator.find_by(name: 'ichimoku')
+    ichimoku.update_attribute(:options, ichimoku.options.merge({for_sure: time}))
+  end
 end
 # tenkan_sen numeric(24,12),
 #   kijun_sen numeric(24,12),
