@@ -1,0 +1,39 @@
+.container-fluid{style: 'margin: 50px;'}
+  - form_options = {html: {class: 'form-horizontal', role: 'form'}}
+  - form_options.merge!(url: create_btce_orders_path) if action_name == 'new_btce'
+  - published = @order.published?
+  = form_for @order, form_options do |f|
+    - unless action_name == 'new_btce'
+      .form-group
+        %label.col-sm-2.control-label Plan
+        .col-xs-2
+          = f.select :plan_id, options_from_collection_for_select(User.first.plans, :id, :name, @order.plan_id), {class: 'form-control', prompt: "..."}
+    - unless published
+      .form-group
+        %label.col-sm-2.control-label Pair
+        .col-xs-2
+          = f.select :pair, options_for_select(PAIRS, @order.pair), {class: 'form-control'}
+      .form-group
+        %label.col-sm-2.control-label Type
+        .col-xs-2
+          = f.select :type, options_for_select([['buy','buy'],['sell','sell']], @order.type), class: 'form-control input-sm'
+      .form-group
+        %label.col-sm-2.control-label Rate
+        .col-xs-2
+          = f.text_field :rate, class: 'form-control input-sm'
+      .form-group
+        %label.col-sm-2.control-label Amount
+        .col-xs-2
+          = f.text_field :amount, class: 'form-control input-sm'
+    - unless action_name == 'new_btce'
+      .form-group
+        %label.col-sm-2.control-label Sell Price
+        .col-xs-2
+          = f.text_field :sell_price, class: 'form-control input-sm'
+      .form-group
+        %label.col-sm-2.control-label Buy Price
+        .col-xs-2
+          = f.text_field :buy_price, class: 'form-control input-sm'
+    .form_group
+      .col-sm-offset-2
+        = f.submit class: 'btn btn-success'

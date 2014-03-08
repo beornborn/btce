@@ -1,9 +1,9 @@
-function addIchimoku(begin, end){
+function addIchimoku(begin, end, id){
   var path = '/ichimoku'
 
   get_chart_data = $.ajax({
     url: path,
-    data: {begin: begin, end: end},
+    data: {begin: begin, end: end, id: id},
     beforeSend: function(){
       $('#status').text('running')
     }

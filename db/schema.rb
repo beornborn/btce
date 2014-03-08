@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140203170948) do
+ActiveRecord::Schema.define(version: 20140304204616) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -206,6 +206,39 @@ ActiveRecord::Schema.define(version: 20140203170948) do
 
   add_index "minutes", ["time"], name: "index_btce_minutes_on_time", using: :btree
 
+  create_table "orders", force: true do |t|
+    t.integer  "plan_id"
+    t.integer  "user_id"
+    t.integer  "btce_id"
+    t.string   "pair"
+    t.string   "type"
+    t.decimal  "amount"
+    t.decimal  "rate"
+    t.datetime "timestamp_created"
+    t.string   "status"
+    t.decimal  "spent_usd"
+    t.decimal  "sell_price"
+    t.string   "state"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.decimal  "buy_price"
+  end
+
+  create_table "plans", force: true do |t|
+    t.string   "name"
+    t.string   "pair"
+    t.integer  "th"
+    t.decimal  "depo"
+    t.decimal  "min"
+    t.decimal  "max"
+    t.decimal  "pr"
+    t.decimal  "martin"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "type"
+  end
+
   create_table "points", force: true do |t|
     t.datetime "time"
     t.text     "val"
@@ -229,6 +262,8 @@ ActiveRecord::Schema.define(version: 20140203170948) do
     t.decimal  "usd",          precision: 24, scale: 12
     t.decimal  "estimate_usd", precision: 24, scale: 12
     t.decimal  "btc",          precision: 24, scale: 12
+    t.decimal  "estimate_btc", precision: 24, scale: 12
+    t.decimal  "price",        precision: 24, scale: 12
     t.string   "action"
     t.integer  "trade_id"
   end
@@ -246,6 +281,7 @@ ActiveRecord::Schema.define(version: 20140203170948) do
     t.integer  "strategy_id"
     t.decimal  "profit_rate",  precision: 4,  scale: 2
     t.text     "options"
+    t.decimal  "estimate_btc", precision: 24, scale: 12
   end
 
   create_table "transactions", force: true do |t|
@@ -255,5 +291,12 @@ ActiveRecord::Schema.define(version: 20140203170948) do
   end
 
   add_index "transactions", ["time"], name: "index_transactions_on_time", using: :btree
+
+  create_table "users", force: true do |t|
+    t.string  "email"
+    t.string  "key"
+    t.string  "secret"
+    t.boolean "api_allowed", default: true
+  end
 
 end

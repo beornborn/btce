@@ -1,0 +1,35 @@
+.container-fluid
+  .row
+    .col-xs-12
+      = link_to 'New plan', new_plan_path
+  .row
+    .col-xs-6
+      %table.table
+        %tr
+          %th name
+          %th pair
+          %th th
+          %th depo
+          %th min
+          %th max
+          %th pr
+          %th martin
+          %th type
+          %th actions
+        - if @plans.present?
+          - @plans.each do |plan|
+            %tr
+              %td= link_to plan.name, plan_path(plan)
+              %td= plan.pair
+              %td= plan.th
+              %td= plan.depo
+              %td= plan.min
+              %td= plan.max
+              %td= plan.pr
+              %td= plan.martin
+              %td= plan.type
+              %td
+                = link_to edit_plan_path(plan) do
+                  %button.btn.btn-primary Edit
+                = link_to plan_path(plan), method: :delete do
+                  %button.btn.btn-danger Delete

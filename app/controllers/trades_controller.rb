@@ -7,13 +7,33 @@ class TradesController < ApplicationController
     render json: to_chart_data(database_data)
   end
 
+  def trade_results
+    trade = Trade.find params[:id]
+    tr = trade.trade_results.select('time, action').order('time asc').map do |r|
+      {x: r.time.to_i*1000, title: r.action}
+    end
+
+    render json: tr
+  end
+
+  def profit_rate_by_range
+    trade = Trade.find params[:id]
+    profit_rate = trade.profit_rate_by_range Time.at(params[:begin].to_i), Time.at(params[:end].to_i)
+
+    render json: profit_rate
+  end
+
   def destroy
     Trade.find(params[:id]).destroy
     redirect_to trades_path
   end
 
   def index
-    @trades = Trade.all
+    @trades = if %w(low_volume up modern).include? params[:attr]
+      Trade.all.sort {|x, y|y.options[params[:attr].to_sym].to_f <=> x.options[params[:attr].to_sym].to_f }
+    else
+      Trade.order('profit_rate desc').all
+    end
   end
 
   def new
@@ -24,23 +44,24 @@ class TradesController < ApplicationController
     @trade_id = params[:id]
   end
 
+  def analyze
+    @trade_id = params[:id]
+  end
+
   def do_trade
     trade = Trade.find params[:id]
+    trade.act = params[:act]
+    trade.current_situation = trade.options[:model_name].constantize.find_by(time: trade.end)
 
-    trade.buy_for trade.usd if params[:act] == 'buy'
-    trade.sell trade.btc if params[:act] == 'sell'
+    trade.manual_trade
 
-    trade.store_result params[:act] unless params[:act] == 'wait'
-    trade.end += MOD_INT[trade.options[:model_name]]
     render json: {success: true} if trade.save!
   end
 
   def get
     trade = Trade.find(params[:id])
     last_tr = trade.trade_results.order('time asc').last
-    usd = last_tr.try(:usd) || trade.initial_usd.to_f
-    btc = last_tr.try(:btc) || 0
-    render json: trade.as_json.merge(usd: usd, btc: btc, begin: trade.begin, end: trade.end)
+    render json: trade.as_json.merge(strategy: trade.strategy)
   end
 
   def last_ichimoku_point

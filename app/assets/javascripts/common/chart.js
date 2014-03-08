@@ -19,10 +19,26 @@ function toggleCandles(show){
   }
 }
 
+function profit_rate_by_range(event){
+  var begin = Math.round(event.xAxis[0].min / 1000)
+  var end = Math.round(event.xAxis[0].max / 1000)
+  $.get('profit_rate_by_range', {begin: begin, end: end}).done(function(data){
+    $('#profit_rate').text(data)
+  })
+}
+
 function initCommonChart(data){
   chart = new Highcharts.StockChart({
     chart: {
-      renderTo: 'chart'
+      zoomType: 'x',
+      renderTo: 'chart',
+      events: {
+        selection: function(event) {
+          if (page == 'analyze'){
+            profit_rate_by_range(event)
+          }
+        }
+      }
     },
 
     colors: ['#4572a7','#bb0000', '#49fff7', '#b41e95', '#4bff68', '#c34420', '#58313c', '#B5CA92'],
@@ -85,7 +101,10 @@ function initCommonChart(data){
         point: {
           events: {
             select: function(e){
-              showPointDetails(this.x / 1000)
+              if (page == 'analyze'){
+                var id = $('#chart').data('id')
+                showTradeResultDetails(this.x / 1000, id)
+              }
             }
           },
         }

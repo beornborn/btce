@@ -15,12 +15,12 @@ class UpdateOther
           IntervalsLoader.load_interval interval, last_interval_time, last_min_time, SULO3
         end
 
-        Hour
-        ichimoku = Indicator.find_by(name: 'ichimoku')
-        last_ichimoku_time = ichimoku.ichimokus.order('time asc').last.time
-        last_model_time = ichimoku.options[:model].order('time asc').last.time
+        # Hour
+        # ichimoku = Indicator.find_by(name: 'ichimoku')
+        # last_ichimoku_time = ichimoku.ichimokus.order('time asc').last.time
+        # last_model_time = ichimoku.options[:model].order('time asc').last.time
 
-        IchimokuLoader.load_ichimoku ichimoku, last_ichimoku_time, last_model_time, SULO5
+        # IchimokuLoader.load_ichimoku ichimoku, last_ichimoku_time, last_model_time, SULO5
 
         sleep 2.minute
       end

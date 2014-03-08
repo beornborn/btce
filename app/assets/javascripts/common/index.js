@@ -1,4 +1,5 @@
 function initIndex(){
+  page = 'index'
   var begin, end, model, before_callback, after_callback
 
   init()
@@ -32,5 +33,9 @@ function initIndex(){
     subscribeToggleIchimoku()
     subscribeToggleVolume()
     subscribeToggleCurrency()
+  }
+
+  function subscribeChartCreate(){
+    $('#go').click(function(){createChart() })
   }
 }

@@ -29,3 +29,8 @@ MOD_DESC = {
   '3 days' => 'Day3',
   '1 week' => 'Day7'
 }
+
+PAIRS = {
+  'btc_usd' => 'btc_usd',
+  'ppc_usd' => 'ppc_usd'
+}

@@ -1,4 +1,5 @@
 function initContinue(){
+  page = 'trade'
   var id = $('#chart').data('id')
   var volume_show = $('#volume').is(":checked")
   var trade

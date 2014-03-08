@@ -17,6 +17,8 @@
 //= require_tree ./trades
 //= require_tree ./common
 var chart = null
+var page = null
+var trade = null
 
 Highcharts.setOptions({
   global: {
@@ -45,19 +47,19 @@ function initChart(data){
       },
 
       title: {
-        text: 'Forex ' + data['rate'] 
+        text: 'Forex ' + data['rate']
       },
-      
+
       rangeSelector : {
         buttons : [
-          {type : 'minute', count : 1, text : '1m'}, 
-          {type : 'minute', count : 3, text : '3m'}, 
-          {type : 'minute', count : 5, text : '5m'}, 
-          {type : 'minute', count : 15, text : '15m'}, 
-          {type : 'hour', count : 1, text : '1h'}, 
-          {type : 'day', count : 1, text : '1D'}, 
+          {type : 'minute', count : 1, text : '1m'},
+          {type : 'minute', count : 3, text : '3m'},
+          {type : 'minute', count : 5, text : '5m'},
+          {type : 'minute', count : 15, text : '15m'},
+          {type : 'hour', count : 1, text : '1h'},
+          {type : 'day', count : 1, text : '1D'},
           {type : 'all', count : 1, text : 'All'}
-        ], 
+        ],
         selected : 6,
         inputEnabled : false
       },
@@ -77,7 +79,7 @@ function initChart(data){
         offset: 0,
         lineWidth: 2
       }],
-      
+
       series : [{
         id: 'candlestick',
         name : 'EUR/USD',
@@ -100,5 +102,5 @@ function initChart(data){
         turboThreshold: 10000000
       }]
     });
- 
+
 }

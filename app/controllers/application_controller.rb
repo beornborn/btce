@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  http_basic_authenticate_with name: "beornborn", password: "beo123"
+  http_basic_authenticate_with name: "beornborn", password: "ololoololoololo43211"
   before_action :permit_all
 
   def permit_all

@@ -17,9 +17,9 @@ class CommonController < ApplicationController
   def ichimoku
     begin_t = Time.parse(params[:begin])
     end_t = Time.parse(params[:end])
-    ap end_t
+
     chinkou_limit = [end_t, Time.now].min
-    indicator = Indicator.find_by(name: 'ichimoku')
+    indicator = Indicator.find(params[:id])
 
     intervals = {tenkan_sen: [], kijun_sen: [], chinkou_span: [], senkou_span_a: [], senkou_span_b: []}
     indicator.ichimokus.select('time, tenkan_sen, kijun_sen, chinkou_span, senkou_span_a, senkou_span_b').where('time >= ? and time <= ?', begin_t, end_t).order('time asc').map do |val|
@@ -31,22 +31,6 @@ class CommonController < ApplicationController
     end
 
     render json: intervals
-  end
-
-  def point_details
-    time = Time.at(params[:time].to_i)
-    ichi = Ichimoku.find_by(time: time)
-    if ichi
-      details = {
-        time: ichi.time,
-        tenkan_sen: ichi.tenkan_sen,
-        kijun_sen: ichi.kijun_sen,
-        chinkou_span: ichi.chinkou_span,
-        senkou_span_a: ichi.senkou_span_a,
-        senkou_span_b: ichi.senkou_span_b
-      }
-    end
-    render json: (details || {point: 'not found'})
   end
 
   def signals

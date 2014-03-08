@@ -9,12 +9,13 @@ gem 'binding_of_caller'
 gem 'rest-client'
 gem 'sidekiq'
 gem 'sinatra', :require => nil
+gem 'transitions', :require => ['transitions', 'active_model/transitions']
 
 group :test do
   gem 'fabrication'
   gem 'rspec-rails'
 
-  gem 'simplecov'         
+  gem 'simplecov'
   gem 'shoulda-matchers'
 end
 

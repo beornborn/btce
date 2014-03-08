@@ -1,0 +1,38 @@
+.container-fluid
+  .row
+    .col-xs-12
+      %table.table
+        %tr
+          %th plan-actions
+          %th name
+          %th pair
+          %th th
+          %th depo
+          %th min
+          %th max
+          %th pr
+          %th martin
+          %th type
+          %th available-depo
+          %th order-actions
+        %tr
+          %td
+            = link_to 'edit', edit_plan_path(@plan), class: 'primary'
+            = link_to 'delete', plan_path(@plan), method: :delete, class: 'alert'
+          %td= @plan.name
+          %td= @plan.pair
+          %td= @plan.th
+          %td= @plan.depo
+          %td= @plan.min
+          %td= @plan.max
+          %td= @plan.pr
+          %td= @plan.martin
+          %td= @plan.type
+          %td= @plan.available_depo
+          %td
+            = link_to 'cancel-all', cancel_all_plan_path(@plan), method: :delete, class: 'alert'
+            = link_to 'delete-not-active', delete_not_active_plan_path(@plan), method: :delete, class: 'alert'
+            = link_to 'generate-buy', generate_billets_plan_path(@plan, type: 'buy'), method: :post, class: 'success'
+            = link_to 'generate-sell', generate_billets_plan_path(@plan, type: 'sell'), method: :post, class: 'success'
+
+= render partial: 'orders/two_columns_list', locals: {database_orders: @database_orders, btce_orders: @btce_orders}

@@ -1,0 +1,41 @@
+.container-fluid{style: 'margin: 50px;'}
+  = form_for @plan, html: {class: 'form-horizontal', role: 'form'} do |f|
+    .form-group
+      %label.col-sm-2.control-label Name
+      .col-xs-2
+        = f.text_field :name, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Pair
+      .col-xs-2
+        = f.select :pair, options_for_select(PAIRS, @plan.pair), {class: 'form-control'}
+    .form-group
+      %label.col-sm-2.control-label Orders Amount
+      .col-xs-2
+        = f.text_field :th, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Depo
+      .col-xs-2
+        = f.text_field :depo, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Min
+      .col-xs-2
+        = f.text_field :min, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Max
+      .col-xs-2
+        = f.text_field :max, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Profit Rate
+      .col-xs-2
+        = f.text_field :pr, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Martin
+      .col-xs-2
+        = f.text_field :martin, class: 'form-control input-sm'
+    .form-group
+      %label.col-sm-2.control-label Type
+      .col-xs-2
+        = f.text_field :type, class: 'form-control input-sm'
+    .form_group
+      .col-sm-offset-2
+        = f.submit class: 'btn btn-success'

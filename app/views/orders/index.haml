@@ -1,0 +1,13 @@
+.container-fluid
+  .row
+    .col-xs-12
+      = link_to 'cancel-all', cancel_all_orders_path, method: :delete, class: 'alert'
+
+.container-fluid
+  .row
+    - if @info.present?
+      .col-xs-3.text-info= "usd: #{@info['funds']['usd']}"
+      .col-xs-3.text-info= "btc: #{@info['funds']['btc']}"
+      .col-xs-3.text-info= "ppc: #{@info['funds']['ppc']}"
+      .col-xs-3.text-info= "open orders: #{@info['open_orders']}"
+= render partial: 'orders/two_columns_list', locals: {database_orders: @database_orders, btce_orders: @btce_orders}

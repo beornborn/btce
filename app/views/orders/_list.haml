@@ -1,0 +1,45 @@
+%table.table
+  %tr
+    %th btce_id
+    - if action_name == 'index'
+      %th plan
+    %th pair
+    %th type
+    %th amount
+    %th rate
+    %th status
+    - if orders.first.try(:persisted?)
+      %th spent_usd
+      %th sell_price
+      %th buy_price
+    %th actions
+  - if orders.present?
+    - orders.each do |order|
+      %tr{class: order.current_state }
+        %td= order.btce_id
+        - if action_name == 'index'
+          %td= order.plan.try(:name)
+        %td= order.pair
+        %td= order.type
+        %td= order.amount
+        %td= order.rate
+        %td= order.status
+        - if order.persisted?
+          %td= order.spent_usd
+          %td= order.sell_price
+          %td= order.buy_price
+        %td
+          - if order.persisted?
+            = link_to 'edit', edit_order_path(order), class: 'edit'
+            = link_to 'derivative', create_derivative_order_path(order), method: :post, class: 'derivative'
+            - if order.billet?
+              = link_to 'publish', publish_order_path(order), method: :post, class: 'active'
+            - if order.active?
+              = link_to 'cancel', cancel_order_path(order.id), method: :delete, class: 'alert'
+            - else
+              = link_to 'delete', order_path(order), method: :delete, class: 'alert'
+
+          - unless order.persisted?
+            = link_to 'cancel', cancel_order_path(order.btce_id), method: :delete, class: 'alert'
+            - unless order.stored?
+              = link_to 'store', store_orders_path(btce_id: order.btce_id), method: :post, class: 'active'

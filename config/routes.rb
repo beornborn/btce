@@ -6,28 +6,48 @@ Bo::Application.routes.draw do
 
   mount Sidekiq::Web, at: "/sidekiq"
   # You can have the root of your site routed with "root"
-  root 'common#index'
+  root 'orders#index'
+
+  resources :common
   get '/chart' => 'common#chart'
-  get '/chart/point_details' => 'common#point_details'
   get '/chart/signals' => 'common#signals'
   get '/ichimoku' => 'common#ichimoku'
 
-  # Example of regular route:
-  #   get 'products/:id' => 'catalog#view'
-
-  # Example of named route that can be invoked with purchase_url(id: product.id)
-  #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
-
-  # Example resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
   resources :trades, only: [:index, :show, :new, :create, :destroy] do
     get :chart, on: :member
     get :continue_chart, on: :member
     get :continue, on: :member
+    get :analyze, on: :member
     get :do_trade, on: :member
     get :get, on: :member
     get :last_chart_point, on: :member
     get :last_ichimoku_point, on: :member
+    get :profit_rate_by_range, on: :member
+    get :trade_results, on: :member
+  end
+
+  resources :trade_results do
+    get :find, on: :collection
+  end
+
+  resources :plans do
+    post :generate_billets, on: :member
+    delete :cancel_all, on: :member
+    delete :delete_not_active, on: :member
+  end
+
+  resources :orders do
+    delete :cancel_all, on: :collection
+    get :new_btce, on: :collection
+    post :create_btce, on: :collection
+    delete :cancel, on: :member
+    post :publish, on: :member
+    post :create_derivative, on: :member
+    post :store, on: :collection
+  end
+
+  resources :users do
+    post :toggle_api, on: :collection
   end
 
   resources :minutes, only: []

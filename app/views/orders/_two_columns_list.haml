@@ -1,0 +1,12 @@
+.container-fluid
+  .row
+    .col-xs-6
+      database orders
+      %div{style: 'float: right;'}
+        = link_to 'new-order', new_order_path(plan_id: @plan.try(:id), pair: @plan.try(:pair)), class: 'fired'
+      = render partial: 'orders/list', locals: {orders: database_orders}
+    .col-xs-6
+      btce orders
+      %div{style: 'float: right;'}
+        = link_to 'new-btce-order', new_btce_orders_path, class: 'fired'
+      = render partial: 'orders/list', locals: {orders: btce_orders}

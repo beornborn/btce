@@ -1,14 +1,18 @@
 class IchimokuLoader < DataLoader
-  def self.load_ichimoku_for_sure
-    Hour
-    ichimoku = Indicator.find_by(name: 'ichimoku')
-    end_time = SystemData.find_by(name: "#{ichimoku.options[:model].table_name}_sure").val || ichimoku.options[:model].order('time asc').last.time
+  def self.load_all_ichimokus_for_sure
+    Indicator.all.each do |indicator|
+      IchimokuForSure.perform_async(indicator.id)
+    end
+  end
+
+  def self.load_ichimoku_for_sure ichimoku
+    end_time = SystemData.find_by(name: "#{ichimoku.options[:model].constantize.table_name}_sure").val || ichimoku.options[:model].constantize.order('time asc').last.time
     load_ichimoku ichimoku, ichimoku.options[:for_sure], end_time, SULO6
     ichimoku.update_attribute(:options, ichimoku.options.merge({for_sure: ichimoku.ichimokus.order('time asc').last.time}))
   end
 
   def self.load_ichimoku ichimoku, time, end_time, logger = BeoLogger
-    short_i, medium_i, long_i, time_unit, model = ichimoku.options[:short], ichimoku.options[:medium], ichimoku.options[:long], ichimoku.options[:time_unit], ichimoku.options[:model]
+    short_i, medium_i, long_i, time_unit, model = ichimoku.options[:short], ichimoku.options[:medium], ichimoku.options[:long], ichimoku.options[:time_unit], ichimoku.options[:model].constantize
     time, end_time = round_to_interval(time - medium_i, time_unit), round_to_interval(end_time, time_unit)
     ichimoku.ichimokus.where("time >= ? AND time <= ?", time, end_time).delete_all
 

@@ -4,7 +4,21 @@
   %title bot
   = stylesheet_link_tag    "application", media: "all", "data-turbolinks-track" => true
   = javascript_include_tag "application"
-  = csrf_meta_tags 
-%body
-
-= yield 
+  = csrf_meta_tags
+%body{style: 'font-size: 10px;'}
+  .container-fluid
+    .row
+      .col-xs-12
+        = link_to common_index_path do
+          %button.btn.btn-link Chart
+        = link_to orders_path do
+          %button.btn.btn-link Orders
+        = link_to plans_path do
+          %button.btn.btn-link Plans
+        .api-status{style: 'float: right;'}
+          - label_type = User.first.api_allowed? ? 'success' : 'danger'
+          - button_text = User.first.api_allowed? ? 'OFF' : 'ON'
+          %span.label{class: "label-#{label_type}", style: 'font-size: 12px;'} API
+          = link_to toggle_api_users_path, method: :post do
+            %button.btn.btn-default.btn-xs= button_text
+  = yield
