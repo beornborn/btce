@@ -1,5 +1,6 @@
 class PlansController < ApplicationController
   before_action :get_info, only: [:show]
+  before_action :set_plan, only: [:edit, :update, :show, :destroy, :generate_billets, :cancel_all, :delete_not_active]
 
   def index
     @plans = current_user.plans
@@ -9,48 +10,47 @@ class PlansController < ApplicationController
     @plan = Plan.new
   end
 
-  def edit
-    @plan = Plan.find params[:id]
-  end
-
-  def update
-    @plan = Plan.find(params[:id])
-    @plan.update_attributes params[:plan]
-    redirect_to plan_path(@plan)
-  end
-
   def create
     @plan = current_user.plans.create! params[:plan]
     redirect_to plan_path(@plan)
   end
 
-  def generate_billets
-    Plan.find(params[:id]).send("create_#{params[:type]}")
-    redirect_to :back
+  def edit
+  end
+
+  def update
+    @plan.update_attributes params[:plan]
+    redirect_to plan_path(@plan)
   end
 
   def show
-    @plan = Plan.find params[:id]
     @database_orders = @plan.orders.order('state asc, timestamp_created asc')
     @btce_orders = @plan.active_orders
   end
 
-  def cancel_all
-    plan = Plan.find params[:id]
-    Order.cancel_all plan.orders.active
-    redirect_to plan_path(plan)
+  def destroy
+    @plan.orders.each {|order| order.cancel }
+    @plan.destroy!
+    redirect_to plans_path
   end
 
-  def delete_not_active
-    plan = Plan.find params[:id]
-    Order.where(id: plan.orders.not_active.pluck(:id)).delete_all
+  def generate_billets
+    @plan.send("create_#{params[:type]}")
     redirect_to :back
   end
 
-  def destroy
-    plan = Plan.find params[:id]
-    plan.orders.each {|order| order.cancel }
-    plan.destroy!
-    redirect_to plans_path
+  def cancel_all
+    Order.cancel_all @plan.orders.active
+    redirect_to plan_path(@plan)
   end
+
+  def delete_not_active
+    Order.where(id: @plan.orders.not_active.pluck(:id)).delete_all
+    redirect_to :back
+  end
+
+  private
+    def set_plan
+      @plan = Plan.find params[:id]
+    end
 end

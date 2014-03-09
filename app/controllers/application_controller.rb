@@ -2,19 +2,18 @@ class ApplicationController < ActionController::Base
   http_basic_authenticate_with name: "beornborn", password: "ololoololoololo43211"
   before_action :permit_all, :require_login
 
+private
+
   def permit_all
     params.permit!
   end
 
   def get_info
-    ap current_user.btce_api.get_info
     @info = current_user.btce_api.get_info
   end
 
-private
-
   def not_authenticated
-    redirect_to login_path, alert: "Please login first"
+    redirect_to login_path
   end
 
   def to_chart_data(data)

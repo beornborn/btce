@@ -1,6 +1,6 @@
 class Plan < ActiveRecord::Base
   self.inheritance_column = 'other'
-  has_many :orders
+  has_many :orders, dependent: :destroy
   belongs_to :user
 
   def bd a
@@ -67,8 +67,6 @@ class Plan < ActiveRecord::Base
   end
 
   def cancel_all
-    orders.each do |order|
-      order.cancel
-    end
+    orders.each {|order| order.cancel }
   end
 end

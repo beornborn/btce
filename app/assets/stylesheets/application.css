@@ -12,30 +12,10 @@
  *= require_tree .
  */
 
-.billet {
-  color: #000000;
-}
-
-.active {
-  color: #114bbd;
-}
-
-.cancelled {
-  color: #858383;
-}
-
-.fired {
-  color: #19870c;
-}
-
-.alert {
-  color: red;
-}
-
-.derivative {
-  color: #8d509f;
-}
-
-.edit {
-  color: #ec6d28;
-}
+.billet {color: #000000; }
+.active {color: #114bbd; }
+.cancelled {color: #858383; }
+.fired {color: #19870c; }
+.alert {color: red; }
+.derivative {color: #8d509f; }
+.edit {color: #ec6d28; }

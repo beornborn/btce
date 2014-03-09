@@ -1,7 +1,7 @@
 %table.table
   %tr
     %th btce_id
-    - if action_name == 'index'
+    - if action_name == 'index' && orders.first.try(:persisted?)
       %th plan
     %th pair
     %th type
@@ -16,7 +16,7 @@
     - orders.each do |order|
       %tr{class: order.current_state }
         %td= order.btce_id
-        - if action_name == 'index'
+        - if action_name == 'index' && orders.first.try(:persisted?)
           %td= order.plan.try(:name)
         %td= order.pair
         %td= order.type

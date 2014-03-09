@@ -10,7 +10,7 @@ class UserSessionsController < ApplicationController
     if @user = login(params[:email], params[:password])
       redirect_to root_path
     else
-      render action: "new"
+      render action: "new", layout: 'auth'
     end
   end
 

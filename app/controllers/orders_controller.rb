@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
   before_action :get_info, only: [:index]
+  before_action :set_order, only: [:edit, :update, :destroy, :publish, :create_derivative]
 
   def index
     @database_orders = current_user.orders.active_or_billet.order('timestamp_created desc')
@@ -10,12 +11,6 @@ class OrdersController < ApplicationController
     @order = Order.new plan_id: params[:plan_id], pair: params[:pair]
   end
 
-  def update
-    order = Order.find params[:id]
-    order.update_attributes params[:order]
-    redirect_to orders_path
-  end
-
   def create
     order = Order.new params[:order]
     order.user = current_user
@@ -24,8 +19,21 @@ class OrdersController < ApplicationController
     redirect_to :back
   end
 
+  def new_btce
+    @order = Order.new
+  end
+
+  def create_btce
+    current_user.btce_api.trade params[:order][:pair], params[:order][:type], params[:order][:rate].to_f, params[:order][:amount].to_f
+    redirect_to root_path
+  end
+
   def edit
-    @order = Order.find params[:id]
+  end
+
+  def update
+    @order.update_attributes params[:order]
+    redirect_to orders_path
   end
 
   def store
@@ -39,17 +47,8 @@ class OrdersController < ApplicationController
     redirect_to root_path
   end
 
-  def new_btce
-    @order = Order.new
-  end
-
-  def create_btce
-    current_user.btce_api.trade params[:order][:pair], params[:order][:type], params[:order][:rate].to_f, params[:order][:amount].to_f
-    redirect_to root_path
-  end
-
   def destroy
-    Order.find(params[:id]).destroy
+    @order.destroy
     redirect_to :back
   end
 
@@ -64,14 +63,17 @@ class OrdersController < ApplicationController
   end
 
   def publish
-    order = Order.find params[:id]
-    order.publish!
+    @order.publish!
     redirect_to :back
   end
 
   def create_derivative
-    order = Order.find params[:id]
-    order.create_derivative
+    @order.create_derivative
     redirect_to :back
   end
+
+  private
+    def set_order
+      @order = Order.find params[:id]
+    end
 end

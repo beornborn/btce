@@ -6,9 +6,7 @@ class TradeResultsController < ApplicationController
     render json: tr
   end
 
-
   def point_details
-
     ichi = Ichimoku.find_by(time: time)
     if ichi
       details = {
