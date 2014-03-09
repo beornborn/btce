@@ -73,7 +73,7 @@ class Order < ActiveRecord::Base
     response = user.btce_api.trade pair, type, rate.to_f, amount.to_f
     if response
       self.btce_id = response['order_id']
-      self.attributes = User.first.btce_api.active_orders[self.btce_id.to_s]
+      self.attributes = current_user.btce_api.active_orders[self.btce_id.to_s]
       self.save!
     end
   end

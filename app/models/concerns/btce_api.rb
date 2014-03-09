@@ -14,7 +14,7 @@ class BtceApi
   end
 
   def sign(params)
-    hmac = OpenSSL::HMAC.new(@user.secret, OpenSSL::Digest::SHA512.new)
+    hmac = OpenSSL::HMAC.new(@user.btce_secret, OpenSSL::Digest::SHA512.new)
     params = params.collect {|k,v| "#{k}=#{v}"}.join('&')
     signed = hmac.update params
   end
@@ -24,7 +24,7 @@ class BtceApi
     nonce = SystemData.find_by(name: 'nonce')
     request_params = params.merge({method: method, nonce: nonce.val})
 
-    response = JSON.parse RestClient.post(url, request_params, :content_type => :json, :accept => :json, :'Key' => @user.key, :'Sign'=>sign(request_params))
+    response = JSON.parse RestClient.post(url, request_params, :content_type => :json, :accept => :json, :'Key' => @user.btce_key, :'Sign'=>sign(request_params))
     nonce.val += 1
     nonce.save!
     response
@@ -52,7 +52,7 @@ class BtceApi
 
   def handle_response response, method
     return [] if response['success'] != 1 && method == :active_orders && (response['error'] == 'no orders' || !@user.api_allowed?)
-    # raise RequestError, response['error'] if response['success'] != 1
+    raise RequestError, response['error'] if response['success'] != 1
     response['return']
   end
 end

@@ -7,7 +7,6 @@
     %th type
     %th amount
     %th rate
-    %th status
     - if orders.first.try(:persisted?)
       %th spent_usd
       %th sell_price
@@ -23,7 +22,6 @@
         %td= order.type
         %td= order.amount
         %td= order.rate
-        %td= order.status
         - if order.persisted?
           %td= order.spent_usd
           %td= order.sell_price

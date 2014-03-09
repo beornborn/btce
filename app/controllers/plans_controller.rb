@@ -1,6 +1,8 @@
 class PlansController < ApplicationController
+  before_action :get_info, only: [:show]
+
   def index
-    @plans = User.first.plans
+    @plans = current_user.plans
   end
 
   def new
@@ -18,7 +20,7 @@ class PlansController < ApplicationController
   end
 
   def create
-    @plan = User.first.plans.create! params[:plan]
+    @plan = current_user.plans.create! params[:plan]
     redirect_to plan_path(@plan)
   end
 

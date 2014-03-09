@@ -7,7 +7,7 @@
       .form-group
         %label.col-sm-2.control-label Plan
         .col-xs-2
-          = f.select :plan_id, options_from_collection_for_select(User.first.plans, :id, :name, @order.plan_id), {class: 'form-control', prompt: "..."}
+          = f.select :plan_id, options_from_collection_for_select(current_user.plans, :id, :name, @order.plan_id), {class: 'form-control', prompt: "..."}
     - unless published
       .form-group
         %label.col-sm-2.control-label Pair

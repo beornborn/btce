@@ -8,7 +8,7 @@ class Plan < ActiveRecord::Base
   end
 
   def available_depo
-    depo - orders.active.buy.pluck(:spent_usd).sum
+    depo - orders.active.buy.pluck(:spent_usd).compact.sum rescue '-'
   end
 
   def active_orders

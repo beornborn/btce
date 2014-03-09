@@ -32,5 +32,6 @@ MOD_DESC = {
 
 PAIRS = {
   'btc_usd' => 'btc_usd',
+  'ltc_usd' => 'ltc_usd',
   'ppc_usd' => 'ppc_usd'
 }

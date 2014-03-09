@@ -1,0 +1,7 @@
+.container-fluid
+  .row
+    - if @info.present?
+      - @info['funds'].each do |cur, amount|
+        - if amount > 0
+          .col-xs-2.text-info= "#{cur}: #{amount}"
+      .col-xs-2.text-info= "open orders: #{@info['open_orders']}"
