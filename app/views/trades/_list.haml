@@ -1,27 +1,24 @@
-= link_to root_path do
-  %button.btn.btn-link Root
-= link_to new_trade_path do
-  %button.btn.btn-link New trade
-%table.table.table-hover.table-bordered{style: 'width: 90%; margin: auto; margin-top: 5px;'}
-  %tbody
-    %tr
-      %th id
-      %th description
-      %th= link_to 'low volume', trades_path(attr: 'low_volume')
-      %th= link_to 'up', trades_path(attr: 'up')
-      %th= link_to 'modern', trades_path(attr: 'modern')
-      %th= link_to 'total profit rate', trades_path
-      %th actions
-    - trades.each do |trade|
-      %tr{style: 'cursor: pointer;'}
-        %td= trade.id
-        %td= link_to trade.to_s, analyze_trade_path(trade)
-        %td= trade.options[:low_volume]
-        %td= trade.options[:up]
-        %td= trade.options[:modern]
-        %td= trade.profit_rate
-        %td
-          = link_to continue_trade_path(trade) do
-            %button.btn.btn-success Continue
-          = link_to trade_path(trade), method: :delete, confirm: "Are you sure?" do
-            %button.btn.btn-danger Destroy
+.container-fluid
+  .row
+    = link_to 'New trade', new_trade_path, class: 'fired'
+    %table.table.table-hover.table-bordered
+      %tbody
+        %tr
+          %th id
+          %th description
+          %th= link_to 'low volume', trades_path(attr: 'low_volume')
+          %th= link_to 'up', trades_path(attr: 'up')
+          %th= link_to 'modern', trades_path(attr: 'modern')
+          %th= link_to 'total profit rate', trades_path
+          %th actions
+        - trades.each do |trade|
+          %tr{style: 'cursor: pointer;'}
+            %td= trade.id
+            %td= link_to trade.to_s, analyze_trade_path(trade)
+            %td= trade.options[:low_volume]
+            %td= trade.options[:up]
+            %td= trade.options[:modern]
+            %td= trade.profit_rate
+            %td
+              = link_to 'continue', continue_trade_path(trade), class: 'fired'
+              = link_to 'destroy', trade_path(trade), method: :delete, confirm: "Are you sure?", class: 'red'

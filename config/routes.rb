@@ -9,10 +9,14 @@ Bo::Application.routes.draw do
 
   root 'orders#index'
 
-  resources :common
-  get '/chart' => 'common#chart'
-  get '/chart/signals' => 'common#signals'
-  get '/ichimoku' => 'common#ichimoku'
+  resources :charts do
+    get :data, on: :collection
+  end
+
+  resources :indicators do
+    get :signals, on: :member
+    get :data, on: :member
+  end
 
   resources :trades, only: [:index, :show, :new, :create, :destroy] do
     get :chart, on: :member
@@ -50,6 +54,4 @@ Bo::Application.routes.draw do
   resources :users do
     post :toggle_api, on: :collection
   end
-
-  resources :minutes, only: []
 end

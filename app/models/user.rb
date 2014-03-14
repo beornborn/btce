@@ -6,6 +6,10 @@ class User < ActiveRecord::Base
   has_many :plans
   has_many :orders
 
+  def owner?
+    email == 'beornborn@gmail.com'
+  end
+
   def api_allowed?; api_allowed; end
 
   def active_orders

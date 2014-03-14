@@ -1,6 +1,7 @@
 function drawChart(begin, end, model, before_callback, after_callback){
+    console.log(begin)
   get_chart_data = $.ajax({
-    url: '/chart',
+    url: '/charts/data',
     data: {begin: begin, end: end, model: model},
     beforeSend: before_callback
   })

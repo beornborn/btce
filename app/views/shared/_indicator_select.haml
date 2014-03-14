@@ -1,0 +1,4 @@
+#select_indicator.col-xs-3
+  %form
+    - default ||= Ichimoku.the_best.id
+    = select_tag 'indicator_id', options_from_collection_for_select(Indicator.all, :id, :name, default), class: 'form-control'

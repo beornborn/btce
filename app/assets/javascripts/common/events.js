@@ -29,7 +29,6 @@ function subscribeDrawIchimoku(){
     var begin = $('#begin').text()
     var end = $('#end').text()
     var id = trade.strategy.options.indicator_id
-    console.log(trade)
     addIchimoku(begin, end, id)
   })
 }

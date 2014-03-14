@@ -1,59 +1,39 @@
-%table#trade.table{style: 'width: 90%; margin: auto; margin-top: 5px;'}
-  %tbody
-    %tr
-      %th Description
-      %th Begin
-      %th End
-      %th Profit rate
-      %th Actions
-    %tr
-      %td#description
-      %td#begin
-      %td#end
-      %td#profit_rate
-      %td
-        = link_to analyze_trade_path(@trade_id) do
-          %button.btn.btn-success{type: 'button'} Analyze
-        = link_to root_path do
-          %button.btn.btn-primary{type: 'button'} Back
-        #status{style: 'color: red;'}
-
-#series{style: 'margin-left: 50px;'}
-  %label.checkbox-inline
-    = check_box_tag 'volume', 'show', true
-    volume
-  %label.checkbox-inline
-    = check_box_tag 'currency', 'show', true
-    bitcoin
-= select_tag 'indicator_id', options_from_collection_for_select(Indicator.all, :id, :name), style: 'margin: auto; margin-top: 5px; margin-left: 50px;'
-#signals{style: 'margin-left: 50px;'}
-#description{style: 'margin-left: 50px; margin-top: 5px; display: none;'}
-#ichimoku_control{style: 'margin-left: 50px;'}
-  %label.checkbox-inline
-    = check_box_tag 'tenkan_sen', 'show', true
-    tenkan
-  %label.checkbox-inline
-    = check_box_tag 'kijun_sen', 'show', true
-    kijun
-  %label.checkbox-inline
-    = check_box_tag 'chinkou_span', 'show', true
-    chinkou
-  %label.checkbox-inline
-    = check_box_tag 'senkou_span_a', 'show', true
-    senkou_a
-  %label.checkbox-inline
-    = check_box_tag 'senkou_span_b', 'show', true
-    senkou_b
-
-#details
-#action{style: 'margin-right: 50px; float: right'}
-  = link_to do_trade_trade_path(@trade_id, act: 'wait'), id: 'wait' do
-    %button.btn.btn-primary Wait
-  = link_to do_trade_trade_path(@trade_id, act: 'buy'), id: 'buy', style: 'display: none;' do
-    %button.btn.btn-primary Buy
-  = link_to do_trade_trade_path(@trade_id, act: 'sell'), id: 'sell', style: 'display: none;' do
-    %button.btn.btn-primary Sell
-#chart{style: 'margin-left: 20px; height: 592px;', data: {id: @trade_id}}
+.container-fluid
+  .row
+    .col-xs-12
+      %table#trade.table
+        %tbody
+          %tr
+            %th Description
+            %th Begin
+            %th End
+            %th Profit rate
+            %th Actions
+          %tr
+            %td#trade_description
+            %td#begin
+            %td#end
+            %td#profit_rate
+            %td
+              = link_to 'Analyze', analyze_trade_path(@trade_id)
+              #status{style: 'color: red;'}
+  .row
+    = render partial: 'shared/indicator_select', locals: {default: Indicator.first.id}
+    = render partial: 'shared/series_select', locals: {bitcoin: true, volume: true}
+    #signals.col-xs-7
+  .row
+    .col-xs-12#description.active{style: 'margin-top: 5px;'}
+  .row
+    = render partial: 'shared/ichimoku_control'
+  .row
+    #action{style: 'margin-right: 50px; float: right'}
+      = link_to do_trade_trade_path(@trade_id, act: 'wait'), id: 'wait' do
+        %button.btn.btn-primary.btn-sm Wait
+      = link_to do_trade_trade_path(@trade_id, act: 'buy'), id: 'buy', style: 'display: none;' do
+        %button.btn.btn-success.btn-sm Buy
+      = link_to do_trade_trade_path(@trade_id, act: 'sell'), id: 'sell', style: 'display: none;' do
+        %button.btn.btn-danger.btn-sm Sell
+    #chart{style: 'height: 592px;', data: {id: @trade_id}}
 
 :javascript
   $(document).ready(function(){

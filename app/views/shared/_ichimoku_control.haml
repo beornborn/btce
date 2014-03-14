@@ -1,0 +1,16 @@
+.col-xs-12#ichimoku_control{style: 'display: none;'}
+  %label.checkbox-inline
+    = check_box_tag 'tenkan_sen', 'show', true
+    tenkan
+  %label.checkbox-inline
+    = check_box_tag 'kijun_sen', 'show', true
+    kijun
+  %label.checkbox-inline
+    = check_box_tag 'chinkou_span', 'show', true
+    chinkou
+  %label.checkbox-inline
+    = check_box_tag 'senkou_span_a', 'show', true
+    senkou_a
+  %label.checkbox-inline
+    = check_box_tag 'senkou_span_b', 'show', true
+    senkou_b

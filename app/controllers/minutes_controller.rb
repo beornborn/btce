@@ -1,3 +1,0 @@
-class MinutesController < ApplicationController
-
-end

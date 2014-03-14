@@ -10,18 +10,25 @@
   .container-fluid
     .row
       .col-xs-12
-        = link_to common_index_path do
-          %button.btn.btn-link Chart
+        - if current_user.owner?
+          = link_to charts_path do
+            %button.btn.btn-link Chart
+          = link_to trades_path do
+            %button.btn.btn-link Trades
         = link_to orders_path do
           %button.btn.btn-link Orders
         = link_to plans_path do
           %button.btn.btn-link Plans
-        .api-status{style: 'float: right;'}
+
+        .right-header{style: 'float: right;'}
+          - if current_user.owner?
+            = link_to '/sidekiq/workers', target: "_blank" do
+              %button.btn.btn-link Sidekiq
           - label_type = current_user.api_allowed? ? 'success' : 'danger'
           - button_text = current_user.api_allowed? ? 'OFF' : 'ON'
           %span.label{class: "label-#{label_type}", style: 'font-size: 12px;'} API
           = link_to toggle_api_users_path, method: :post do
-            %button.btn.btn-default.btn-xs= button_text
+            %button.btn.btn-link.btn-xs= button_text
 
   = render partial: 'shared/funds_info'
   = yield

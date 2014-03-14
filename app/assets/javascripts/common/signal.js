@@ -1,13 +1,8 @@
 function get_signals(){
   var indicator_id = $('#indicator_id').find(":selected").val()
-  var path = '/chart/signals'
+  var path = '/indicators/' + indicator_id + '/signals'
 
-  get_signals = $.ajax({
-    url: path,
-    data: {indicator_id: indicator_id}
-  })
-
-  $.when(get_signals).done(function(data){
+  $.get(path).done(function(data){
     $('#signals').html('')
     $.each(data, function(k, v){
       $('<span/>', {

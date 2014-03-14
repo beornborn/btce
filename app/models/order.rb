@@ -29,6 +29,15 @@ class Order < ActiveRecord::Base
     end
   end
 
+  def publish
+    response = user.btce_api.trade pair, type, rate.to_f, amount.to_f
+    if response
+      self.btce_id = response['order_id']
+      self.attributes = current_user.btce_api.active_orders[self.btce_id.to_s]
+      self.save!
+    end
+  end
+
   def published?
     persisted? && user.order_by_btce_id(btce_id).present?
   end
@@ -67,15 +76,6 @@ class Order < ActiveRecord::Base
 
   def self.cancel_all orders
     orders.each {|order| order.cancel!}
-  end
-
-  def publish
-    response = user.btce_api.trade pair, type, rate.to_f, amount.to_f
-    if response
-      self.btce_id = response['order_id']
-      self.attributes = current_user.btce_api.active_orders[self.btce_id.to_s]
-      self.save!
-    end
   end
 
   def create_derivative

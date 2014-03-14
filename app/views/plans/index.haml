@@ -29,7 +29,5 @@
               %td= plan.martin
               %td= plan.type
               %td
-                = link_to edit_plan_path(plan) do
-                  %button.btn.btn-primary Edit
-                = link_to plan_path(plan), method: :delete do
-                  %button.btn.btn-danger Delete
+                = link_to 'edit', edit_plan_path(plan), class: 'action'
+                = link_to 'delete', plan_path(plan), method: :delete, class: 'red'

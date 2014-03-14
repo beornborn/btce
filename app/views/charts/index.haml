@@ -1,0 +1,37 @@
+.container-fluid
+  .row
+    .col-xs-12
+      %form#range_for_chart
+        %table.table.chart_customization
+          %tbody
+            %tr
+              %td= text_field_tag :begin, @end.to_date - 9.day, class: 'form-control', placeholder: @begin.to_date
+              %td= text_field_tag :end, @end.to_date, class: 'form-control', placeholder: @end.to_date
+              %td= select_tag 'model', options_for_select(MOD_DESC, 'Hour'), class: 'form-control'
+              %td
+                .actions
+                  %button#go.btn.btn-success{type: 'button'} Go
+                  %button#draw_ichimoku.btn.btn-success{type: 'button'} Ichi
+                  #status.red
+
+  .row
+    = render partial: 'shared/indicator_select'
+    = render partial: 'shared/series_select', locals: {bitcoin: true, volume: false}
+
+    #signals.col-xs-7
+
+  .row
+    .col-xs-12#description.active{style: 'margin-top: 5px;'}
+
+  .row
+    = render partial: 'shared/ichimoku_control'
+
+
+  .row#details
+
+  .row#chart{style: 'height: 592px;'}
+
+  :javascript
+    $(document).ready(function(){
+      initIndex()
+    })

@@ -73,8 +73,13 @@ class TradesController < ApplicationController
     render json: @trade.as_json.merge(strategy: @trade.strategy)
   end
 
+  def last_chart_point
+    point = @trade.model.find_by(time: @trade.end)
+    render json: to_chart_data([point])
+  end
+
   def last_ichimoku_point
-    indicator = Indicator.find_by(name: 'ichimoku')
+    indicator = Indicator.find(params[:indicator_id])
     chinkou_time = [@trade.end, Time.now].min - indicator.options[:medium]
     intervals = {tenkan_sen: [], kijun_sen: [], chinkou_span: [], senkou_span_a: [], senkou_span_b: []}
     indicator.ichimokus.where('time = ?', @trade.end).map do |val|
@@ -88,11 +93,6 @@ class TradesController < ApplicationController
       intervals[:chinkou_span] << [val.time.to_i*1000, val.chinkou_span.to_f]
     end
     render json: intervals
-  end
-
-  def last_chart_point
-    point = @trade.model.find_by(time: @trade.end)
-    render json: to_chart_data([point])
   end
 
   private
