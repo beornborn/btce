@@ -1,6 +1,8 @@
 require 'rest_client'
 
-class Btce < ActiveRecord::Base
+class Btce
+  include BotUtil
+
   def self.follow
     url = 'https://btc-e.com/api/3/trades/btc_usd'
     request_interval = 2.0
@@ -10,7 +12,7 @@ class Btce < ActiveRecord::Base
       begin
         trades = JSON.parse(RestClient.get "#{url}?limit=#{limit}")['btc_usd']
       rescue Exception
-        SULO1.error "#{Time.now}: bad request"
+        BTCE_FOL_L.error "#{Time.now}: bad request"
         sleep 0.5
         next
       end
@@ -22,13 +24,13 @@ class Btce < ActiveRecord::Base
       limit = [[trades.count * 3, 100].max, 2000].min
       request_interval = update_request_interval(limit, request_interval)
 
-      SULO1.info "#{Time.now}: #{trades.count}"
+      BTCE_FOL_L.info "#{Time.now}: #{trades.count}"
       sleep request_interval
     end
   end
 
   def self.remove_not_appropriate_transactions(trades)
-    last_time_transaction = Transaction.order('time asc').last.time.to_i
+    last_time_transaction = Transaction.order('time asc').last.try(:time).try(:to_i) || 1
     last_time_trade = trades.first["timestamp"]
     trades.delete_if do |trade|
       trade["timestamp"] == last_time_trade || trade['timestamp'] <= last_time_transaction

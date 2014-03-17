@@ -1,13 +1,13 @@
 class IchimokuLoader < DataLoader
   def self.load_all_ichimokus_for_sure
     Indicator.all.each do |indicator|
-      IchimokuForSure.perform_async(indicator.id)
+      load_ichimoku_for_sure indicator
     end
   end
 
   def self.load_ichimoku_for_sure ichimoku
     end_time = SystemData.find_by(name: "#{ichimoku.options[:model].constantize.table_name}_sure").val || ichimoku.options[:model].constantize.order('time asc').last.time
-    load_ichimoku ichimoku, ichimoku.options[:for_sure], end_time, SULO6
+    load_ichimoku ichimoku, ichimoku.options[:for_sure], end_time
     ichimoku.update_attribute(:options, ichimoku.options.merge({for_sure: ichimoku.ichimokus.order('time asc').last.time}))
   end
 
@@ -20,7 +20,7 @@ class IchimokuLoader < DataLoader
     time = model.where('time >= ?', time).order('time asc').first.time
 
     while model.where('time > ? AND time <= ?', time - long_i - medium_i, time).count < long_a + medium_a
-      logger.info "skip #{time} ''''''''''''''''''''''''''''''''''''''''''''''''"
+      ap "skip #{time} ''''''''''''''''''''''''''''''''''''''''''''''''"
       time += time_unit
     end
 
@@ -41,18 +41,12 @@ class IchimokuLoader < DataLoader
       time += time_unit
 
       if batch.size > 1000 || time > end_time
-        ichimoku_log(batch, model, logger)
+        logger.log_batch batch
+        ap batch.first.inspect
         save_batch batch
         batch = []
       end
     end
-  end
-
-  def self.ichimoku_log(batch, model, logger)
-    logger.info "------------------------------- new #{model.to_s} ichimoku batch #{Time.now} ----------------------------------"
-    logger.info "batch size: #{batch.size}"
-    logger.info "first instance--- time: #{batch.first.time} tenkan_sen: #{batch.first.tenkan_sen}"
-    logger.info "last instance---- time: #{batch.last.time} tenkan_sen: #{batch.last.tenkan_sen}"
   end
 
   def self.calc_tenkan_sen(s)

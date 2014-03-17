@@ -7,7 +7,7 @@
     .form-group
       %label.col-sm-2.control-label Pair
       .col-xs-2
-        = f.select :pair, options_for_select(PAIRS, @plan.pair), {class: 'form-control'}
+        = f.select :pair, options_for_select(PAIRS, @plan.pair), {}, {class: 'form-control'}
     .form-group
       %label.col-sm-2.control-label Orders Amount
       .col-xs-2
@@ -35,7 +35,7 @@
     .form-group
       %label.col-sm-2.control-label Type
       .col-xs-2
-        = f.text_field :type, class: 'form-control input-sm'
+        = f.select :type, options_for_select(%w(buy sell), @plan.pair), {}, {class: 'form-control'}
     .form_group
       .col-sm-offset-2
         = f.submit class: 'btn btn-success'

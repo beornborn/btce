@@ -13,10 +13,6 @@
       .col-xs-2
         = f.text_field :initial_usd, value: 1000, class: 'form-control input-sm'
     .form-group
-      = f.label :exchange, class: 'col-sm-2 control-label'
-      .col-xs-2
-        = f.select :exchange_id, options_from_collection_for_select(Exchange.all, :id, :name), {}, {class: 'form-control'}
-    .form-group
       = f.label :strategy, class: 'col-sm-2 control-label'
       .col-xs-2
         = f.select :strategy_id, options_from_collection_for_select(Strategy.all, :id, :name), {}, {class: 'form-control'}

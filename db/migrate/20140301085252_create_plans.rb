@@ -9,6 +9,7 @@ class CreatePlans < ActiveRecord::Migration
       t.decimal :max
       t.decimal :pr
       t.decimal :martin
+      t.string  :type
       t.references :user
 
       t.timestamps

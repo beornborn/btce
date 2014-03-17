@@ -35,3 +35,5 @@ PAIRS = {
   'ltc_usd' => 'ltc_usd',
   'ppc_usd' => 'ppc_usd'
 }
+
+COMISSION = 0.002

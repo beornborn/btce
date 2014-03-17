@@ -1,37 +1,8 @@
 class Trade < ActiveRecord::Base
   has_many :trade_results, dependent: :destroy
-  belongs_to :exchange
   belongs_to :strategy
   attr_accessor :logger, :act, :current_situation
   serialize :options
-
-  def self.exp
-    base = Indicator.first.dup
-    current_type = []
-    original_type = []
-    16.times {|i| current_type << [3.hours, 6.hours, 30.hours].map {|x| x * (1 + BigDecimal(0.2, 1) * i) }}
-    16.times {|i| original_type << [3.hours, 9.hours, 18.hours].map {|x| x * (1 + BigDecimal(0.2, 1) * i) }}
-
-    current_type.each do |t|
-      ind = base.dup
-      ind.name = "ichimoku_current_#{t.first / 60*60}"
-      ind.options[:short] = t[0]
-      ind.options[:medium] = t[1]
-      ind.options[:long] = t[2]
-      ind.options[:for_sure] = Hour.order('time asc').first.time
-      ind.save!
-    end
-
-    original_type.each do |t|
-      ind = base.dup
-      ind.name = "ichimoku_original_#{t.first / 60*60}"
-      ind.options[:short] = t[0]
-      ind.options[:medium] = t[1]
-      ind.options[:long] = t[2]
-      ind.options[:for_sure] = Hour.order('time asc').first.time
-      ind.save!
-    end
-  end
 
   def self.trade_all_ichimokus
     Indicator.all.each do |indicator|
@@ -45,7 +16,6 @@ class Trade < ActiveRecord::Base
           usd: 1000,
           estimate_usd: 1000,
           btc: 0,
-          exchange: Exchange.find_by(name: 'btce'),
           strategy: strategy,
           options: {description: strategy.name, model_name: 'Hour'}
         )
@@ -55,24 +25,24 @@ class Trade < ActiveRecord::Base
   end
 
   def auto_trade
-    # trade_results.delete_all
+    trade_results.delete_all
 
-    # time_model = model
-    # time_interval = MOD_INT[time_model.to_s]
-    # time = self.begin
-    # self.usd = self.initial_usd
-    # self.btc = 0
+    time_model = model
+    time_interval = MOD_INT[time_model.to_s]
+    time = self.begin
+    self.usd = self.initial_usd
+    self.btc = 0
 
-    # self.end = time_model.order('time asc').last.time
+    self.end = time_model.order('time asc').last.time
 
-    # while time <= self.end
-    #   self.current_situation = time_model.find_by(time: time)
+    while time <= self.end
+      self.current_situation = time_model.find_by(time: time)
 
-    #   make_decision
-    #   store_result
+      make_decision
+      store_result
 
-    #   time += time_interval
-    # end
+      time += time_interval
+    end
 
     point_1 = trade_results.order('time asc').first.time
     point_2 = trade_results.where('time <= ?', Time.new(2013,10,12)).order('time asc').last.time
@@ -136,18 +106,18 @@ class Trade < ActiveRecord::Base
 
   def buy_for amount
     self.usd -= amount
-    self.btc += (amount / current_situation.close) * (1 - exchange.options[:comission])
-    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - exchange.options[:comission])
-    self.estimate_btc = self.btc + (self.usd / current_situation.close) * (1 - exchange.options[:comission])
+    self.btc += (amount / current_situation.close) * (1 - COMISSION)
+    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - COMISSION)
+    self.estimate_btc = self.btc + (self.usd / current_situation.close) * (1 - COMISSION)
     self.profit_rate = (estimate_usd / initial_usd).round(2)
     save!
   end
 
   def sell amount
     self.btc -= amount
-    self.usd += (amount * current_situation.close) * (1 - exchange.options[:comission])
-    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - exchange.options[:comission])
-    self.estimate_btc = self.btc + (self.usd / current_situation.close) * (1 - exchange.options[:comission])
+    self.usd += (amount * current_situation.close) * (1 - COMISSION)
+    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - COMISSION)
+    self.estimate_btc = self.btc + (self.usd / current_situation.close) * (1 - COMISSION)
     self.profit_rate = (estimate_usd / initial_usd).round(2)
     save!
   end

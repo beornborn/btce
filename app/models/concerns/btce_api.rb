@@ -21,12 +21,11 @@ class BtceApi
 
   def send_request method, params = {}
     url = 'https://btc-e.com/tapi'
-    nonce = SystemData.find_by(name: 'nonce')
-    request_params = params.merge({method: method, nonce: nonce.val})
-
+    request_params = params.merge({method: method, nonce: @user.nonce})
+    ap request_params
     response = JSON.parse RestClient.post(url, request_params, :content_type => :json, :accept => :json, :'Key' => @user.btce_key, :'Sign'=>sign(request_params))
-    nonce.val += 1
-    nonce.save!
+    @user.nonce += 1
+    @user.save!
     response
   end
 

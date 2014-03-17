@@ -2,7 +2,8 @@ class MinutesLoader < DataLoader
   def self.load_minutes_for_sure
     minutes_sure = SystemData.find_by(name: 'minutes_sure')
     minutes_sure ||= SystemData.create name: 'minutes_sure', val: Time.at(Transaction.order('time asc').first.time)
-    load_minutes minutes_sure.val, SystemData.find_by(name: 'transactions_sure').val, SULO8
+
+    load_minutes minutes_sure.val, SystemData.find_by(name: 'transactions_sure').val
     minutes_sure.update_attribute(:val, Minute.last.time)
   end
 
@@ -45,10 +46,7 @@ class MinutesLoader < DataLoader
       time += 1.minute
 
       if batch.size > 1000 || time > end_time
-        logger.info "------------------------------- new minutes batch #{Time.now} ----------------------------------------"
-        logger.info "batch size: #{batch.size}"
-        logger.info "first instance--- time: #{batch.first.time} open: #{batch.first.open} amount: #{batch.first.amount}"
-        logger.info "last instance---- time: #{batch.last.time} open: #{batch.last.open} amount: #{batch.last.amount}"
+        logger.log_batch batch
         save_batch batch
         batch = []
       end

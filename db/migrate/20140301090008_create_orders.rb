@@ -12,6 +12,7 @@ class CreateOrders < ActiveRecord::Migration
       t.string :status
       t.decimal :spent_usd
       t.decimal :sell_price
+      t.decimal :buy_price
       t.string :state
 
       t.timestamps

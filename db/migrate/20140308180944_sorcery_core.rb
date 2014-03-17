@@ -6,6 +6,7 @@ class SorceryCore < ActiveRecord::Migration
       t.string :salt,             :null => false
       t.string :btce_key
       t.string :btce_secret
+      t.integer :nonce,            :default => 1
       t.boolean :api_allowed,      :default => true
 
       t.timestamps

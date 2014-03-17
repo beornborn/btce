@@ -1,7 +1,19 @@
 class BeoLogger
   attr_accessor :logged_date, :trade, :trade_time
 
-  def self.info msg 
+  def self.log_sidekiq_error e, ctx_hash
+    SKQ_EXC_L.error "#{Time.now} #{e.message}"
+    SKQ_EXC_L.error e.backtrace.join("\n")
+    SKQ_EXC_L.error ctx_hash.inspect
+    SKQ_EXC_L.info (['-'*100]*3).join("\n")
+  end
+
+  def self.log_batch batch
+    BATCH_L.info "------------------------------- new #{batch.first.class} batch #{Time.now} -------------------------------------"
+    BATCH_L.info "batch size: #{batch.size}; begin: #{batch.first.time}; end: #{batch.last.time}"
+  end
+
+  def self.info msg
     ap msg
   end
 
@@ -18,13 +30,13 @@ class BeoLogger
   end
 
   def print_result r
-    ap "#{r.time}: usd: #{r.usd}$, btc: #{r.btc}$, estimate_usd: #{r.estimate_usd}$" 
+    ap "#{r.time}: usd: #{r.usd}$, btc: #{r.btc}$, estimate_usd: #{r.estimate_usd}$"
   end
 
   def print_progress
-    if trade.current_situation.time.to_date != logged_date 
-      ap(progress) 
-      self.logged_date += 1.day 
+    if trade.current_situation.time.to_date != logged_date
+      ap(progress)
+      self.logged_date += 1.day
       print_result TradeResult.last
     end
   end
