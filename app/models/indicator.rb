@@ -25,7 +25,6 @@ class Indicator < ActiveRecord::Base
       first_mult += 1.2
     end
 
-    batch = []
     configs.each do |t|
       ind = Indicator.new options: base_params
       ind.name = "ichimoku_#{t[0]}_#{t[1]}_#{t[2]}"
@@ -33,9 +32,7 @@ class Indicator < ActiveRecord::Base
       ind.options[:medium] = t[1]
       ind.options[:long] = t[2]
       ind.options[:for_sure] = Hour.order('time asc').first.time
-      batch << ind
+      ind.save!
     end
-
-    save_batch batch
   end
 end

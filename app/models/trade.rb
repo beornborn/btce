@@ -20,7 +20,8 @@ class Trade < ActiveRecord::Base
           options: {description: strategy.name, model_name: 'Hour'}
         )
 
-      AutoTrade.perform_async trade.id
+      # AutoTrade.perform_async trade.id
+      trade.auto_trade
     end
   end
 
@@ -59,7 +60,7 @@ class Trade < ActiveRecord::Base
 
   def profit_rate_by_range from, to
     tr = trade_results.where('time >= ? AND time <= ?', from, to).order('time asc')
-    profit_rate = tr.present? ? (tr.last.estimate_usd / tr.first.estimate_usd).round(2) : 'none'
+    pr = tr.present? ? (tr.last.estimate_usd / tr.first.estimate_usd).round(2) : 1
   end
 
   def make_decision
@@ -105,19 +106,19 @@ class Trade < ActiveRecord::Base
   end
 
   def buy_for amount
-    self.usd -= amount
-    self.btc += (amount / current_situation.close) * (1 - COMISSION)
-    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - COMISSION)
-    self.estimate_btc = self.btc + (self.usd / current_situation.close) * (1 - COMISSION)
+    self.usd -= (amount).round(20)
+    self.btc += ((amount / current_situation.close) * (1 - COMISSION)).round(20)
+    self.estimate_usd = (self.usd + (self.btc * current_situation.close) * (1 - COMISSION)).round(20)
+    self.estimate_btc = (self.btc + (self.usd / current_situation.close) * (1 - COMISSION)).round(20)
     self.profit_rate = (estimate_usd / initial_usd).round(2)
     save!
   end
 
   def sell amount
-    self.btc -= amount
-    self.usd += (amount * current_situation.close) * (1 - COMISSION)
-    self.estimate_usd = self.usd + (self.btc * current_situation.close) * (1 - COMISSION)
-    self.estimate_btc = self.btc + (self.usd / current_situation.close) * (1 - COMISSION)
+    self.btc -= (amount).round(20)
+    self.usd += ((amount * current_situation.close) * (1 - COMISSION)).round(20)
+    self.estimate_usd = (self.usd + (self.btc * current_situation.close) * (1 - COMISSION)).round(20)
+    self.estimate_btc = (self.btc + (self.usd / current_situation.close) * (1 - COMISSION)).round(20)
     self.profit_rate = (estimate_usd / initial_usd).round(2)
     save!
   end
