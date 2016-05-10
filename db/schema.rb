@@ -16,7 +16,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "days", force: true do |t|
+  create_table "days", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "open",     precision: 24, scale: 12
     t.decimal  "high",     precision: 24, scale: 12
@@ -28,7 +28,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "days", ["time"], name: "index_days_on_time", using: :btree
 
-  create_table "hour4s", force: true do |t|
+  create_table "hour4s", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "open",     precision: 24, scale: 12
     t.decimal  "high",     precision: 24, scale: 12
@@ -40,7 +40,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "hour4s", ["time"], name: "index_hour4s_on_time", using: :btree
 
-  create_table "hours", force: true do |t|
+  create_table "hours", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "open",     precision: 24, scale: 12
     t.decimal  "high",     precision: 24, scale: 12
@@ -52,7 +52,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "hours", ["time"], name: "index_hours_on_time", using: :btree
 
-  create_table "ichimokus", force: true do |t|
+  create_table "ichimokus", force: :cascade do |t|
     t.integer  "indicator_id"
     t.datetime "time"
     t.decimal  "tenkan_sen",    precision: 24, scale: 12
@@ -65,12 +65,12 @@ ActiveRecord::Schema.define(version: 20140308180944) do
   add_index "ichimokus", ["indicator_id"], name: "index_ichimokus_on_indicator_id", using: :btree
   add_index "ichimokus", ["time"], name: "index_ichimokus_on_time", using: :btree
 
-  create_table "indicators", force: true do |t|
+  create_table "indicators", force: :cascade do |t|
     t.string "name"
     t.text   "options"
   end
 
-  create_table "minute15s", force: true do |t|
+  create_table "minute15s", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "open",     precision: 24, scale: 12
     t.decimal  "high",     precision: 24, scale: 12
@@ -82,7 +82,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "minute15s", ["time"], name: "index_minute15s_on_time", using: :btree
 
-  create_table "minutes", force: true do |t|
+  create_table "minutes", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "open",     precision: 24, scale: 12
     t.decimal  "high",     precision: 24, scale: 12
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "minutes", ["time"], name: "index_minutes_on_time", using: :btree
 
-  create_table "orders", force: true do |t|
+  create_table "orders", force: :cascade do |t|
     t.integer  "plan_id"
     t.integer  "user_id"
     t.integer  "btce_id"
@@ -112,7 +112,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
     t.datetime "updated_at"
   end
 
-  create_table "plans", force: true do |t|
+  create_table "plans", force: :cascade do |t|
     t.string   "name"
     t.string   "pair"
     t.integer  "th"
@@ -127,18 +127,18 @@ ActiveRecord::Schema.define(version: 20140308180944) do
     t.datetime "updated_at"
   end
 
-  create_table "strategies", force: true do |t|
+  create_table "strategies", force: :cascade do |t|
     t.string "name"
     t.text   "options"
     t.string "options_hash"
   end
 
-  create_table "system_data", force: true do |t|
+  create_table "system_data", force: :cascade do |t|
     t.string "name"
     t.text   "val"
   end
 
-  create_table "trade_results", force: true do |t|
+  create_table "trade_results", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "usd",          precision: 24, scale: 12
     t.decimal  "estimate_usd", precision: 24, scale: 12
@@ -151,7 +151,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "trade_results", ["time"], name: "index_trade_results_on_time", using: :btree
 
-  create_table "trades", force: true do |t|
+  create_table "trades", force: :cascade do |t|
     t.integer  "strategy_id"
     t.datetime "begin"
     t.datetime "end"
@@ -164,7 +164,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
     t.text     "options"
   end
 
-  create_table "transactions", force: true do |t|
+  create_table "transactions", force: :cascade do |t|
     t.datetime "time"
     t.decimal  "price",  precision: 24, scale: 12
     t.decimal  "amount", precision: 24, scale: 12
@@ -172,7 +172,7 @@ ActiveRecord::Schema.define(version: 20140308180944) do
 
   add_index "transactions", ["time"], name: "index_transactions_on_time", using: :btree
 
-  create_table "users", force: true do |t|
+  create_table "users", force: :cascade do |t|
     t.string   "email",                           null: false
     t.string   "crypted_password",                null: false
     t.string   "salt",                            null: false
