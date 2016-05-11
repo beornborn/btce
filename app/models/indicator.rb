@@ -16,7 +16,6 @@ class Indicator < ActiveRecord::Base
       while second_mult <= 6
         start = 1.hours
         while start <= 36.hours
-          ap "#{start} #{first_mult} #{second_mult}"
           configs << [start, start * first_mult, start * first_mult * second_mult].map(&:to_i)
           start += 12.hours
         end
