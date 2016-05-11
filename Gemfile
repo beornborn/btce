@@ -20,6 +20,7 @@ gem 'uglifier'
 gem 'coffee-rails'
 gem 'jquery-rails'
 gem 'jbuilder'
+gem 'awesome_print'
 
 group :test do
   gem 'fabrication'
@@ -30,6 +31,5 @@ group :test do
 end
 
 group :test, :development do
-  gem 'awesome_print'
   gem 'pry-rails'
 end
