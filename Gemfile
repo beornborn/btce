@@ -12,6 +12,7 @@ gem 'sinatra', :require => nil
 gem 'transitions', :require => ['transitions', 'active_model/transitions']
 gem 'sorcery'
 gem 'puma'
+gem 'rails_12factor'
 
 gem 'rails', '4.2.6'
 gem 'sass-rails'
