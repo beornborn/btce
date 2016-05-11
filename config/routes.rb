@@ -1,5 +1,4 @@
 require 'sidekiq/web'
-require 'sidetiq/web'
 
 Bo::Application.routes.draw do
   get 'login' => 'user_sessions#new', :as => :login

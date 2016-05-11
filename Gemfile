@@ -8,7 +8,6 @@ gem 'better_errors', group: :development
 gem 'binding_of_caller'
 gem 'rest-client'
 gem 'sidekiq'
-gem 'sidetiq'
 gem 'sinatra', :require => nil
 gem 'transitions', :require => ['transitions', 'active_model/transitions']
 gem 'sorcery'

@@ -1,8 +1,6 @@
 class UpdateIntervals
   include Sidekiq::Worker
-  include Sidetiq::Schedulable
   sidekiq_options :backtrace => true
-  recurrence { minutely(2) }
 
   def perform
     last_min_time = Minute.order('time asc').last.time
