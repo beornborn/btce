@@ -18,4 +18,13 @@ class UserSessionsController < ApplicationController
     logout
     redirect_to login_path
   end
+
+  def guest_enter
+    user = User.find_or_create_by(guest: true) do |u|
+      u.email = 'guest@guest.com'
+    end
+
+    @user = auto_login(user)
+    redirect_back_or_to root_path, success: 'Guest session. You can see but you can\'t change anything'
+  end
 end

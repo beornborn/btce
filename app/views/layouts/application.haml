@@ -10,20 +10,18 @@
   .container-fluid
     .row
       .col-xs-12
-        - if current_user.owner?
-          = link_to charts_path do
-            %button.btn.btn-link Chart
-          = link_to trades_path do
-            %button.btn.btn-link Trades
+        = link_to charts_path do
+          %button.btn.btn-link Chart
+        = link_to trades_path do
+          %button.btn.btn-link Trades
         = link_to orders_path do
           %button.btn.btn-link Orders
         = link_to plans_path do
           %button.btn.btn-link Plans
 
         .right-header{style: 'float: right;'}
-          - if current_user.owner?
-            = link_to '/sidekiq/workers', target: "_blank" do
-              %button.btn.btn-link Sidekiq
+          = link_to '/sidekiq/workers', target: "_blank" do
+            %button.btn.btn-link Sidekiq
           - label_type = current_user.api_allowed? ? 'success' : 'danger'
           - button_text = current_user.api_allowed? ? 'OFF' : 'ON'
           %span.label{class: "label-#{label_type}", style: 'font-size: 12px;'} API

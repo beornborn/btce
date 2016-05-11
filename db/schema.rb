@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140308180944) do
+ActiveRecord::Schema.define(version: 20160510135335) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -173,17 +173,16 @@ ActiveRecord::Schema.define(version: 20140308180944) do
   add_index "transactions", ["time"], name: "index_transactions_on_time", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "email",                           null: false
-    t.string   "crypted_password",                null: false
-    t.string   "salt",                            null: false
+    t.string   "email"
+    t.string   "crypted_password"
+    t.string   "salt"
     t.string   "btce_key"
     t.string   "btce_secret"
     t.integer  "nonce",            default: 1
-    t.boolean  "api_allowed",      default: true
+    t.boolean  "api_allowed",      default: false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "guest",            default: false
   end
-
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
 
 end

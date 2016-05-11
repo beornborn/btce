@@ -4,6 +4,7 @@ require 'sidetiq/web'
 Bo::Application.routes.draw do
   get 'login' => 'user_sessions#new', :as => :login
   post 'auth' => 'user_sessions#create', :as => :auth
+  post 'guest_enter' => 'user_sessions#guest_enter', :as => :guest_enter
   delete 'logout' => 'user_sessions#destroy', :as => :logout
 
   mount Sidekiq::Web, at: "/sidekiq"
